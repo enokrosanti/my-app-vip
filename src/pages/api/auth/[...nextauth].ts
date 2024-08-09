@@ -15,14 +15,16 @@ const authOptions: NextAuthOptions = {
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
+        fullname: { label: "Fullname", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { email, password } = credentials as {
+        const { email, password, fullname } = credentials as {
           email: string;
           password: string;
+          fullname: string;
         };
-        const user: any = { id: 1, email: email, password: password };
+        const user: any = { id: 1, email: email, password: password, fullname: fullname };
         if (user) {
           return user;
         } else {
@@ -32,7 +34,7 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, profile }) {
       if (account?.provider === "credentials") {
         token.email = user.email;
       }
