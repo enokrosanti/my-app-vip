@@ -10,7 +10,7 @@ export default function withAuth(middleware: NextMiddleware, requireAuth: string
         secret: process.env.NEXTAUTH_SSECRET,
       });
       if (!token) {
-        const url = new URL("/");
+        const url = new URL("/", req.url);
         return NextResponse.redirect(url);
       }
       return middleware(req, next);
