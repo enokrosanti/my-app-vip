@@ -12,7 +12,7 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         fullname: { label: "Fullname", type: "text" },
@@ -25,7 +25,7 @@ const authOptions: NextAuthOptions = {
           fullname: string;
         };
         const user: any = { id: 1, email: email, password: password, fullname: fullname };
-        if (user) {
+        if (user) {        
           return user;
         } else {
           return null;
@@ -34,16 +34,21 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile, fullname }: any) {
       if (account?.provider === "credentials") {
         token.email = user.email;
+        token.fullname = user.fullname;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (token.email) {
         session.user = session.user || {};
         session.user.email = token.email;
+      }
+      if (token.fullname) {
+        session.user = session.user || {};
+        session.user.fullname = token.fullname;
       }
       return session;
     },
